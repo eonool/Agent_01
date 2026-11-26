@@ -31,10 +31,26 @@ flowchart LR
 | Rubric area | Where in code |
 |---|---|
 | Tool & Interface Design | `agent_01/tools/*` — specific names, full docstrings, Pydantic schemas (`schemas.py`), `recovery_hint` on every error |
-| Context & Memory | `prompts.py` constitution; session state via `output_key`; cross-cycle memory in `memory_tools.py` |
-| Orchestration & Logic | `agent.py` — Sequential + Parallel agents, structured outputs |
+| Context & Memory | `prompts.py` constitution; session state via `output_key`; **events compaction** (`App(events_compaction_config=...)`); **persistent memory** in Firestore (`memory_tools.FirestoreStore`) + **semantic memory** via ADK MemoryService / Vertex AI Memory Bank (`preload_memory`, `add_session_to_memory`); **async background writes** (`save_action_items`) |
+| Orchestration & Logic | `agent.py` — Sequential + Parallel agents, structured outputs; **strategic model routing** (fast model for extraction, `gemini-3.1-pro-preview` for agenda reasoning); **human-in-the-loop** confirmation before publishing (`FunctionTool(require_confirmation=True)`); PII guardrail callback |
 | Observability & Tracing | `observability.py` — JSON logs, tool latency, privacy guardrail callback, Cloud Trace exporter |
-| Infrastructure & CI/CD | `pyproject.toml`, `tests/`, `tests/eval/`, GitHub Actions, `Dockerfile`, `scripts/deploy.sh` |
+| Infrastructure & CI/CD | `tests/` + `tests/eval/` golden set; GitHub Actions (lint, privacy scan, tests, `terraform validate`); **Terraform IaC** (`infra/terraform`: APIs, least-privilege SA, Secret Manager, Firestore, Cloud Run, Cloud Scheduler); **Secret Manager** OAuth loading (`tools/google_auth.py`); `Dockerfile` |
+
+## Memory options
+- Default: local JSON (`memory_backend: "json"`).
+- Persistent: `AGENT01_MEMORY_BACKEND=firestore` (database created by Terraform).
+- Semantic: `adk web --memory_service_uri=agentengine://<agent_engine_id> .`
+
+## Human approval
+Publishing to the shared Google Doc pauses for your confirmation in `adk web`.
+For unattended runs set `AGENT01_REQUIRE_CONFIRMATION=false`.
+
+## Infrastructure
+```bash
+cd infra/terraform
+terraform init
+terraform apply -var="project_id=<project>" -var="image=<artifact-registry-image>"
+```
 
 ## Privacy by design
 - Customers are only ever called `ACCOUNT_A` / `ACCOUNT_B`. The real label

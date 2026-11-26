@@ -55,9 +55,16 @@ def test_publish_rejects_bad_title(demo_cfg):
     assert r["status"] == "error" and "YYYY-MM-DD" in r["recovery_hint"]
 
 
-def test_memory_roundtrip(demo_cfg):
-    assert memory_tools.get_previous_action_items()["action_items"] == []
-    memory_tools.save_action_items("2026-11-13 to 2026-11-26", ["Send residency doc"])
-    r = memory_tools.get_previous_action_items()
+async def test_memory_roundtrip(demo_cfg):
+    assert (await memory_tools.get_previous_action_items())["action_items"] == []
+    r = await memory_tools.save_action_items("2026-11-13 to 2026-11-26", ["Send residency doc"])
+    assert r["status"] == "scheduled"
+    await memory_tools.wait_for_background_writes()
+    r = await memory_tools.get_previous_action_items()
     assert r["period_label"] == "2026-11-13 to 2026-11-26"
     assert r["action_items"] == ["Send residency doc"]
+
+
+async def test_memory_save_requires_period(demo_cfg):
+    r = await memory_tools.save_action_items("", ["x"])
+    assert r["status"] == "error" and "get_review_period" in r["recovery_hint"]

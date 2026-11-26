@@ -1,9 +1,14 @@
 {
   "mode": "demo",
-  "model": "gemini-3-flash-preview",
+  "fast_model": "gemini-3-flash-preview",
+  "reasoning_model": "gemini-3.1-pro-preview",
   "google_doc_id": null,
   "output_dir": "outputs",
+  "memory_backend": "json",
   "memory_path": ".agent01_memory.json",
+  "require_publish_confirmation": true,
+  "oauth_client_secret_name": null,
+  "oauth_token_secret_name": null,
   "lookback_days": 14,
   "accounts": [
     {"alias": "ACCOUNT_A", "gmail_label": "0.ACCOUNT_A", "keywords": []},

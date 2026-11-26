@@ -12,12 +12,15 @@ dependencies = [
 live = [
   "google-api-python-client",
   "google-auth-oauthlib",
+  "google-cloud-firestore",
+  "google-cloud-secret-manager",
   "opentelemetry-exporter-gcp-trace",
 ]
-dev = ["pytest", "ruff"]
+dev = ["pytest", "pytest-asyncio", "ruff"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+asyncio_mode = "auto"
 
 [tool.ruff]
 line-length = 110
