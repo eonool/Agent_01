@@ -1,0 +1,9 @@
+[
+  {"account_alias": "ACCOUNT_A", "message_id": "a-001", "date": "2026-11-14", "sender": "pm@account-a.example", "subject": "Gemini PoC kickoff confirmed", "snippet": "Thanks for the workshop. The team agreed to start a 4-week Gemini PoC for customer support summarization."},
+  {"account_alias": "ACCOUNT_A", "message_id": "a-002", "date": "2026-11-18", "sender": "cto@account-a.example", "subject": "Re: Vertex AI quota increase", "snippet": "Quota increase approved after your escalation. Load test can proceed next week."},
+  {"account_alias": "ACCOUNT_A", "message_id": "a-003", "date": "2026-11-24", "sender": "legal@account-a.example", "subject": "Data residency question", "snippet": "Before production we need written confirmation on data residency for the Seoul region."},
+  {"account_alias": "ACCOUNT_B", "message_id": "b-001", "date": "2026-11-15", "sender": "lead@account-b.example", "subject": "GKE migration wave 2 complete", "snippet": "Wave 2 of the GKE migration finished with zero downtime. 40% of game servers are now on GKE."},
+  {"account_alias": "ACCOUNT_B", "message_id": "b-002", "date": "2026-11-20", "sender": "finance@account-b.example", "subject": "Committed use discount proposal", "snippet": "We reviewed the CUD proposal and want a follow-up call on 3-year pricing."},
+  {"account_alias": "ACCOUNT_B", "message_id": "b-003", "date": "2026-11-25", "sender": "ops@account-b.example", "subject": "Latency spike incident", "snippet": "Saw a latency spike in asia-northeast3 during launch. Requesting a joint postmortem."},
+  {"account_alias": "ACCOUNT_B", "message_id": "b-000", "date": "2026-10-01", "sender": "old@account-b.example", "subject": "Out of range email", "snippet": "This email is outside the review window and must be ignored."}
+]

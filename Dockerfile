@@ -1,0 +1,7 @@
+FROM python:3.11-slim
+WORKDIR /app
+COPY . .
+RUN pip install --no-cache-dir -e .
+ENV AGENT01_MODE=demo PORT=8080
+EXPOSE 8080
+CMD ["sh", "-c", "adk web --host 0.0.0.0 --port ${PORT} ."]

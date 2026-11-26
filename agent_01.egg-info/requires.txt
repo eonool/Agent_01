@@ -1,0 +1,11 @@
+google-adk>=1.0.0
+pydantic>=2.0
+
+[dev]
+pytest
+ruff
+
+[live]
+google-api-python-client
+google-auth-oauthlib
+opentelemetry-exporter-gcp-trace

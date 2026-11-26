@@ -1,0 +1,12 @@
+{
+  "mode": "demo",
+  "model": "gemini-3-flash-preview",
+  "google_doc_id": null,
+  "output_dir": "outputs",
+  "memory_path": ".agent01_memory.json",
+  "lookback_days": 14,
+  "accounts": [
+    {"alias": "ACCOUNT_A", "gmail_label": "0.ACCOUNT_A", "keywords": []},
+    {"alias": "ACCOUNT_B", "gmail_label": "1.ACCOUNT_B", "keywords": []}
+  ]
+}

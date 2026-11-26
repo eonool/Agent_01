@@ -1,0 +1,23 @@
+[project]
+name = "agent-01"
+version = "0.1.0"
+description = "Bi-weekly achievement summary and manager 1:1 agenda agent built with Google ADK"
+requires-python = ">=3.10"
+dependencies = [
+  "google-adk>=1.0.0",
+  "pydantic>=2.0",
+]
+
+[project.optional-dependencies]
+live = [
+  "google-api-python-client",
+  "google-auth-oauthlib",
+  "opentelemetry-exporter-gcp-trace",
+]
+dev = ["pytest", "ruff"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 110

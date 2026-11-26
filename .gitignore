@@ -1,0 +1,12 @@
+# Local-only secrets and real data
+config.local.json
+credentials.json
+token.json
+.env
+.agent01_memory.json
+outputs/
+# Python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/

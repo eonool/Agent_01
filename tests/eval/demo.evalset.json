@@ -1,0 +1,25 @@
+{
+  "eval_set_id": "agent01_demo",
+  "description": "End-to-end demo eval on synthetic emails. Run: adk eval agent_01 tests/eval/demo.evalset.json",
+  "eval_cases": [
+    {
+      "eval_id": "biweekly_review_2026_11_26",
+      "conversation": [
+        {
+          "user_content": {"role": "user", "parts": [{"text": "Prepare my bi-weekly review for the period ending 2026-11-26."}]},
+          "final_response": {"role": "model", "parts": [{"text": "Published 2026-11-26 Bi-weekly Review. ACCOUNT_A: PoC kickoff and quota approval; data residency risk. ACCOUNT_B: GKE wave 2 complete; latency incident postmortem requested."}]},
+          "intermediate_data": {
+            "tool_uses": [
+              {"name": "get_review_period", "args": {"reference_date": "2026-11-26"}},
+              {"name": "search_account_emails", "args": {"account_alias": "ACCOUNT_A", "start_date": "2026-11-13", "end_date": "2026-11-26"}},
+              {"name": "search_account_emails", "args": {"account_alias": "ACCOUNT_B", "start_date": "2026-11-13", "end_date": "2026-11-26"}},
+              {"name": "get_previous_action_items", "args": {}},
+              {"name": "publish_biweekly_review_tab", "args": {"tab_title": "2026-11-26 Bi-weekly Review"}},
+              {"name": "save_action_items", "args": {"period_label": "2026-11-13 to 2026-11-26"}}
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
