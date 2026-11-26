@@ -8,6 +8,7 @@ import time
 from typing import Any
 
 from .config import load_config
+from .redaction import redact, redact_text
 
 logger = logging.getLogger("agent_01.trace")
 _START_KEY = "_tool_started_at"
@@ -52,16 +53,52 @@ def before_tool_guard(tool, args: dict, tool_context) -> dict | None:
     return None
 
 
-def after_tool_log(tool, args: dict, tool_context, tool_response) -> None:
+def after_tool_log(tool, args: dict, tool_context, tool_response):
+    """Log outcome + latency, then actively scrub PII from the response before the LLM sees it."""
     started = tool_context.state.get(_START_KEY)
     latency_ms = round((time.monotonic() - started) * 1000, 1) if started else None
     status = tool_response.get("status") if isinstance(tool_response, dict) else "n/a"
     _log("tool_end", tool=tool.name, status=status, latency_ms=latency_ms)
+    if isinstance(tool_response, dict):
+        scrubbed = redact(tool_response)
+        if scrubbed != tool_response:
+            _log("pii_redacted", source="tool_response", tool=tool.name)
+            return scrubbed
+    return None
+
+
+def after_model_redact(callback_context, llm_response):
+    """Scrub PII from model text output before it is stored in state or shown to the user."""
+    content = getattr(llm_response, "content", None)
+    if not content or not content.parts:
+        return None
+    changed = False
+    for part in content.parts:
+        if getattr(part, "text", None):
+            clean = redact_text(part.text)
+            if clean != part.text:
+                part.text = clean
+                changed = True
+    if changed:
+        _log("pii_redacted", source="model_output", agent=callback_context.agent_name)
+        return llm_response
+    return None
+
+
+class RedactingFilter(logging.Filter):
+    """Logging filter that scrubs PII from every log record."""
+
+    def filter(self, record: logging.LogRecord) -> bool:
+        record.msg = redact_text(record.getMessage())
+        record.args = ()
+        return True
 
 
 def setup_tracing() -> None:
     """Configure JSON logging; export OpenTelemetry spans to Cloud Trace when available."""
     logging.basicConfig(level=logging.INFO, format="%(message)s")
+    for handler in logging.getLogger().handlers:
+        handler.addFilter(RedactingFilter())
     try:
         from opentelemetry import trace
         from opentelemetry.exporter.cloud_trace import CloudTraceSpanExporter

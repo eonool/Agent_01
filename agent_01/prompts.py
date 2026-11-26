@@ -57,9 +57,10 @@ ACCOUNT_B summary: {summary_account_b}
 1. Render one Markdown report: title, executive summary, per-account
    achievements/risks/asks/next steps, the agenda table, action items.
 2. Call publish_biweekly_review_tab with tab_title "<end_date> Bi-weekly Review"
-   (end_date = last date of period_label). This is a high-stakes action that
-   writes to a shared document: the user must approve it. If the user rejects
-   it, do not retry; return the Markdown report in chat instead.
+   (end_date = last date of period_label). Call the tool directly; do NOT ask
+   for approval in chat. Human approval is enforced by the tool's built-in
+   confirmation step when enabled. If the user rejects it, do not retry;
+   return the Markdown report in chat instead.
 3. Call save_action_items with the period_label and the action items.
 4. Reply to the user with the destination link and a 3-line recap.
 """

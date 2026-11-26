@@ -23,6 +23,7 @@ from . import prompts
 from .config import load_config
 from .observability import (
     after_agent_log,
+    after_model_redact,
     after_tool_log,
     before_agent_log,
     before_tool_guard,
@@ -43,7 +44,11 @@ CFG = load_config()
 FAST_MODEL = CFG.fast_model
 REASONING_MODEL = CFG.reasoning_model
 
-_cb = {"before_agent_callback": before_agent_log, "after_agent_callback": after_agent_log}
+_cb = {
+    "before_agent_callback": before_agent_log,
+    "after_agent_callback": after_agent_log,
+    "after_model_callback": after_model_redact,
+}
 _tool_cb = {"before_tool_callback": before_tool_guard, "after_tool_callback": after_tool_log}
 
 
@@ -109,6 +114,7 @@ publisher_agent = LlmAgent(
     tools=[publish_tool, save_action_items],
     before_agent_callback=before_agent_log,
     after_agent_callback=save_session_to_memory_callback,
+    after_model_callback=after_model_redact,
     **_tool_cb,
 )
 
