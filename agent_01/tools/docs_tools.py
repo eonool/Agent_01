@@ -48,7 +48,7 @@ def publish_biweekly_review_tab(tab_title: str, report_markdown: str) -> dict:
             path = cfg.output_dir / f"{tab_title.replace(' ', '_')}.md"
             path.write_text(report_markdown, encoding="utf-8")
             dest = str(path)
-    except Exception as e:  # noqa: BLE001
+    except Exception as e:
         logger.exception("publish failed")
         return _err(tab_title, f"Publish failed: {type(e).__name__}: {e}",
                     "Retry once. If it still fails, return the report text to the user so nothing is lost.")

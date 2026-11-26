@@ -24,8 +24,8 @@ from .tools import (
 
 setup_tracing()
 MODEL = load_config().model
-_cb = dict(before_agent_callback=before_agent_log, after_agent_callback=after_agent_log)
-_tool_cb = dict(before_tool_callback=before_tool_guard, after_tool_callback=after_tool_log)
+_cb = {"before_agent_callback": before_agent_log, "after_agent_callback": after_agent_log}
+_tool_cb = {"before_tool_callback": before_tool_guard, "after_tool_callback": after_tool_log}
 
 gmail_fetcher_agent = LlmAgent(
     name="gmail_fetcher_agent",

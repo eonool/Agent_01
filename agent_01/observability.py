@@ -29,13 +29,11 @@ def _forbidden_terms() -> list[str]:
 def before_agent_log(callback_context) -> None:
     _log("agent_start", agent=callback_context.agent_name,
          invocation_id=callback_context.invocation_id)
-    return None
 
 
 def after_agent_log(callback_context) -> None:
     _log("agent_end", agent=callback_context.agent_name,
          invocation_id=callback_context.invocation_id)
-    return None
 
 
 def before_tool_guard(tool, args: dict, tool_context) -> dict | None:
@@ -59,7 +57,6 @@ def after_tool_log(tool, args: dict, tool_context, tool_response) -> None:
     latency_ms = round((time.monotonic() - started) * 1000, 1) if started else None
     status = tool_response.get("status") if isinstance(tool_response, dict) else "n/a"
     _log("tool_end", tool=tool.name, status=status, latency_ms=latency_ms)
-    return None
 
 
 def setup_tracing() -> None:

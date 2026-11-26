@@ -92,7 +92,7 @@ def search_account_emails(
             emails = _search_gmail_live(req, cfg.accounts[req.account_alias])
         else:
             emails = _search_synthetic(req)
-    except Exception as e:  # noqa: BLE001 - convert any backend failure to guidance
+    except Exception as e:
         logger.exception("gmail search failed")
         return EmailSearchResult(
             status="error",
