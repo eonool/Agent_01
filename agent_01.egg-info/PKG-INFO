@@ -8,7 +8,10 @@ Requires-Dist: pydantic>=2.0
 Provides-Extra: live
 Requires-Dist: google-api-python-client; extra == "live"
 Requires-Dist: google-auth-oauthlib; extra == "live"
+Requires-Dist: google-cloud-firestore; extra == "live"
+Requires-Dist: google-cloud-secret-manager; extra == "live"
 Requires-Dist: opentelemetry-exporter-gcp-trace; extra == "live"
 Provides-Extra: dev
 Requires-Dist: pytest; extra == "dev"
+Requires-Dist: pytest-asyncio; extra == "dev"
 Requires-Dist: ruff; extra == "dev"

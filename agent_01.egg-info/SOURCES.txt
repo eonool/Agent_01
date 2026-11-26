@@ -11,6 +11,7 @@ agent_01.egg-info/SOURCES.txt
 agent_01.egg-info/dependency_links.txt
 agent_01.egg-info/requires.txt
 agent_01.egg-info/top_level.txt
+agent_01/data/synthetic_emails.json
 agent_01/tools/__init__.py
 agent_01/tools/docs_tools.py
 agent_01/tools/gmail_tools.py

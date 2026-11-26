@@ -3,9 +3,12 @@ pydantic>=2.0
 
 [dev]
 pytest
+pytest-asyncio
 ruff
 
 [live]
 google-api-python-client
 google-auth-oauthlib
+google-cloud-firestore
+google-cloud-secret-manager
 opentelemetry-exporter-gcp-trace
