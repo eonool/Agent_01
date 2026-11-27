@@ -25,7 +25,7 @@ def _customer_term_map() -> tuple[tuple[re.Pattern, str], ...]:
     """Map real customer terms to their neutral alias (longest terms first)."""
     pairs = []
     for alias, acct in load_config().accounts.items():
-        for term in [acct.gmail_label, acct.gmail_label.split(".")[-1], *acct.keywords]:
+        for term in acct.sensitive_terms:
             if term and not term.upper().endswith(alias):
                 pairs.append((term, alias))
     pairs.sort(key=lambda p: len(p[0]), reverse=True)

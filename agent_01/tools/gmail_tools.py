@@ -2,6 +2,7 @@
 
 demo mode : reads synthetic emails from agent_01/data/synthetic_emails.json
 live mode : queries the Gmail API with local OAuth credentials (never committed)
+corp_cli  : uses Google-internal pre-approved Gmail CLI (see corp_workspace.py)
 """
 
 from __future__ import annotations
@@ -49,7 +50,7 @@ def get_review_period(reference_date: str = "") -> dict:
 
 
 def search_account_emails(
-    account_alias: str, start_date: str, end_date: str, max_results: int = 50
+    account_alias: str, start_date: str, end_date: str, max_results: int = 100
 ) -> dict:
     """Fetch emails for one customer account within a date range.
 
@@ -61,7 +62,7 @@ def search_account_emails(
             Never pass a real customer name.
         start_date: Inclusive start date, ISO format YYYY-MM-DD.
         end_date: Inclusive end date, ISO format YYYY-MM-DD.
-        max_results: Maximum emails to return (1-200). Default 50.
+        max_results: Maximum emails to return (1-200). Default 100.
 
     Returns:
         dict matching EmailSearchResult: `status`, `account_alias`, `emails`,
@@ -90,6 +91,10 @@ def search_account_emails(
     try:
         if cfg.mode == "live":
             emails = _search_gmail_live(req, cfg.accounts[req.account_alias])
+        elif cfg.mode == "corp_cli":
+            from . import corp_workspace
+
+            emails = corp_workspace.search_emails(req, cfg.accounts[req.account_alias])
         else:
             emails = _search_synthetic(req)
     except Exception as e:

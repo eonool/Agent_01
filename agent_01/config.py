@@ -24,13 +24,20 @@ class AccountConfig:
     alias: str
     gmail_label: str
     keywords: list[str] = field(default_factory=list)
+    redact_terms: list[str] = field(default_factory=list)
+
+    @property
+    def sensitive_terms(self) -> list[str]:
+        """Real names that must never appear in outputs (label core name + extra terms)."""
+        core = self.gmail_label.split(".", 1)[-1].strip()
+        return [t for t in {self.gmail_label, core, *self.keywords, *self.redact_terms} if t]
 
 
 @dataclass(frozen=True)
 class AppConfig:
     """Top-level settings. `mode` is 'demo' (synthetic data) or 'live'."""
 
-    mode: str
+    mode: str  # "demo" (synthetic) | "live" (OAuth) | "corp_cli" (Google-internal Workspace CLIs)
     model: str
     accounts: dict[str, AccountConfig]
     google_doc_id: str | None
@@ -53,21 +60,30 @@ def _bool(value, default: bool) -> bool:
     return str(value).strip().lower() in {"1", "true", "yes", "y"}
 
 
+def _memory_path_for_mode(raw: dict, mode: str) -> Path:
+    """Keep memory separate per mode so synthetic demo follow-ups never leak into real reviews."""
+    base = Path(raw.get("memory_path", ".agent01_memory.json"))
+    return REPO_ROOT / f"{base.stem}.{mode}{base.suffix}"
+
+
 def load_config() -> AppConfig:
     """Load config.local.json if present, otherwise the public example config."""
     path = LOCAL_CONFIG_PATH if LOCAL_CONFIG_PATH.exists() else EXAMPLE_CONFIG_PATH
     raw = json.loads(path.read_text(encoding="utf-8"))
     accounts = {
-        a["alias"]: AccountConfig(a["alias"], a["gmail_label"], a.get("keywords", []))
+        a["alias"]: AccountConfig(
+            a["alias"], a["gmail_label"], a.get("keywords", []), a.get("redact_terms", [])
+        )
         for a in raw["accounts"]
     }
+    mode = os.getenv("AGENT01_MODE", raw.get("mode", "demo"))
     return AppConfig(
-        mode=os.getenv("AGENT01_MODE", raw.get("mode", "demo")),
+        mode=mode,
         model=os.getenv("AGENT01_MODEL", raw.get("model", "gemini-2.5-flash")),
         accounts=accounts,
         google_doc_id=os.getenv("AGENT01_GOOGLE_DOC_ID", raw.get("google_doc_id")),
         output_dir=REPO_ROOT / raw.get("output_dir", "outputs"),
-        memory_path=REPO_ROOT / raw.get("memory_path", ".agent01_memory.json"),
+        memory_path=_memory_path_for_mode(raw, mode),
         lookback_days=int(raw.get("lookback_days", 14)),
         fast_model=os.getenv("AGENT01_FAST_MODEL", raw.get("fast_model", "gemini-3-flash-preview")),
         reasoning_model=os.getenv(

@@ -16,7 +16,7 @@ class EmailSearchRequest(BaseModel):
     account_alias: AccountAlias
     start_date: date
     end_date: date
-    max_results: int = Field(default=50, ge=1, le=200)
+    max_results: int = Field(default=100, ge=1, le=200)
 
     @field_validator("end_date")
     @classmethod

@@ -38,11 +38,16 @@ def publish_biweekly_review_tab(tab_title: str, report_markdown: str) -> dict:
 
     cfg = load_config()
     try:
-        if cfg.mode == "live":
+        if cfg.mode in ("live", "corp_cli"):
             if not cfg.google_doc_id:
                 return _err(tab_title, "No Google Doc configured.",
                             "Set google_doc_id in config.local.json or AGENT01_GOOGLE_DOC_ID.")
-            dest = _publish_live(cfg.google_doc_id, tab_title, report_markdown)
+            if cfg.mode == "corp_cli":
+                from . import corp_workspace
+
+                dest = corp_workspace.publish_tab(cfg.google_doc_id, tab_title, report_markdown)
+            else:
+                dest = _publish_live(cfg.google_doc_id, tab_title, report_markdown)
         else:
             cfg.output_dir.mkdir(parents=True, exist_ok=True)
             path = cfg.output_dir / f"{tab_title.replace(' ', '_')}.md"

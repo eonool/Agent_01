@@ -22,8 +22,7 @@ def _forbidden_terms() -> list[str]:
     """Real labels from the local config; these must never leave the machine in outputs."""
     terms = []
     for acct in load_config().accounts.values():
-        terms.append(acct.gmail_label.split(".")[-1])
-        terms.extend(acct.keywords)
+        terms.extend(acct.sensitive_terms)
     return [t.lower() for t in terms if t and not t.upper().startswith("ACCOUNT_")]
 
 
