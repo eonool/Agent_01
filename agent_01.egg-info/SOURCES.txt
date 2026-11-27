@@ -5,6 +5,7 @@ agent_01/agent.py
 agent_01/config.py
 agent_01/observability.py
 agent_01/prompts.py
+agent_01/redaction.py
 agent_01/schemas.py
 agent_01.egg-info/PKG-INFO
 agent_01.egg-info/SOURCES.txt
@@ -18,4 +19,5 @@ agent_01/tools/gmail_tools.py
 agent_01/tools/google_auth.py
 agent_01/tools/memory_tools.py
 tests/test_agent_structure.py
+tests/test_redaction.py
 tests/test_tools.py

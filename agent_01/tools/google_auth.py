@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import json
 import logging
+import os
 
 from ..config import REPO_ROOT, load_config
 
@@ -80,7 +81,10 @@ def _run_consent_flow(cfg):
             "No OAuth client found. Configure oauth_client_secret_name (Secret Manager) "
             "or place credentials.json at the repo root."
         )
-    return flow.run_local_server(port=0)
+    # Fixed port so the redirect can be SSH-forwarded from a laptop to a remote VM:
+    #   ssh -L 8765:localhost:8765 <vm>
+    port = int(os.getenv("AGENT01_OAUTH_PORT", "8765"))
+    return flow.run_local_server(port=port, open_browser=False)
 
 
 def _persist(cfg, creds, use_sm: bool) -> None:
